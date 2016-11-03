@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
+using Cinode.Skills.Api.Mappers;
+using Cinode.Skills.Api.Repositories;
 
 namespace Api
 {
@@ -29,6 +31,8 @@ namespace Api
         public void ConfigureServices(IServiceCollection services)
         {
             RegisterAllServicesByConvention(services);
+            RegisterMappers(services);
+            RegisterRepositories(services);
             // Add framework services.
             services.AddMvc();
         }
@@ -46,6 +50,18 @@ namespace Api
             app.UseMvc();
         }
 
+        private void RegisterRepositories(IServiceCollection services)
+        {
+            var type = typeof(IRepository<>);
+            var repositories = GetAllTypesWhichImplementsInterface(type);
+
+            foreach (var repo in repositories)
+            {
+                var serviceType = repo.GetTypeInfo().GetInterface(type.GetTypeInfo().Name);
+                services.AddSingleton(serviceType, repo);
+            }
+        }
+
         private void RegisterAllServicesByConvention(IServiceCollection services)
         {
             var typesWithMatchingInterfaceNames = GetType().GetTypeInfo().Assembly.ExportedTypes.Where(x => 
@@ -56,6 +72,24 @@ namespace Api
                 var serviceType = implementationType.GetTypeInfo().GetInterface("I" + implementationType.Name);
                 services.AddScoped(serviceType, implementationType);
             }
+        }
+
+        private void RegisterMappers(IServiceCollection services)
+        {
+            var type = typeof(IMapper<,>);
+            var mappers = GetAllTypesWhichImplementsInterface(type);
+
+            foreach (var mapper in mappers)
+            {
+                var serviceType = mapper.GetTypeInfo().GetInterface(type.GetTypeInfo().Name);
+                services.AddScoped(serviceType, mapper);
+            }
+        }
+
+        private IEnumerable<Type> GetAllTypesWhichImplementsInterface(Type type)
+        {
+            return GetType().GetTypeInfo().Assembly.ExportedTypes.Where(x => 
+                x.GetTypeInfo().GetInterfaces().Any(i => i.Name == type.GetTypeInfo().Name));
         }
     }
 }
