@@ -10,9 +10,11 @@ import { MdInput } from '@angular/material';
 })
 export class SkillAdderComponent implements OnInit {
 
-  @ViewChild('skillInput') skillInput: MdInput;
+  private changedRating: number;
 
   ratings: Rating[];
+
+  @ViewChild('skillInput') skillInput: MdInput;
 
   constructor(private skillService: SkillService) {
   }
@@ -22,58 +24,29 @@ export class SkillAdderComponent implements OnInit {
   }
 
   addSkill() {
-    this.skillService.add(this.skillInput.value, this.getSelectedRating().id).subscribe(x => {
+    this.skillService.add(this.skillInput.value, this.changedRating).subscribe(x => {
     }, (err) => {
       console.log(err);
     });
     this.reset();
   }
 
-  onHoverRating(rating: Rating) {
-    this.ratings.forEach(x => {
-      x.isHovered = x.id <= rating.id;
-    });
-  }
-
-  onClickRating(rating: Rating) {
-    const selected = this.getSelectedRating();
-    let newValue = (x: Rating) => x.id <= rating.id;
-    if (selected === rating && selected.isSet) {
-      newValue = () => false;
-    }
-
-    this.ratings.forEach(x => {
-      x.isSet = newValue(x);
-    });
-  }
-
   isAddSkillButtonDisabled() {
     return this.isSkillNameEmpty();
   }
 
-  isRatingButtonDisabled() {
-    return this.isSkillNameEmpty();
+  isSkillNameEmpty() {
+    return !this.skillInput.value;
   }
 
-  onHoverExit() {
-    this.ratings.forEach(x => x.isHovered = false);
-  }
-
-  getRatingColor(rating: Rating) {
-    const isHovering = this.ratings.some(x => x.isHovered);
-    if (isHovering) {
-      return rating.isHovered ? 'accent' : 'primary';
-    }
-    return rating.isSet ? 'accent' : 'primary';
-  }
-
-  private getSelectedRating() {
-    return this.ratings.reduce((prev, curr) => {
-      return curr.isSet ? curr : prev;
-    }, new Rating());
+  onRatingChanged(rating: number) {
+    console.log('tjo');
+    this.changedRating = rating;
   }
 
   private reset() {
+    this.skillInput.focus();
+    this.skillInput.value = '';
     this.ratings = [];
     for (let i = 1; i <= 5; i++) {
       this.ratings.push({
@@ -82,11 +55,5 @@ export class SkillAdderComponent implements OnInit {
         id: i
       });
     }
-    this.skillInput.focus();
-    this.skillInput.value = '';
-  }
-
-  private isSkillNameEmpty() {
-    return !this.skillInput.value;
   }
 }

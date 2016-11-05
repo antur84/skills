@@ -1,0 +1,11 @@
+<span (mouseout)="onHoverExit()">
+    <button 
+      md-icon-button class="rating" 
+      *ngFor="let rating of ratings" 
+      [disabled]="isRatingButtonDisabled()" 
+      (click)="onClickRating(rating)"
+      [color]="getRatingColor(rating)" 
+      (mouseover)="onHoverRating(rating)">
+        <md-icon class="icon">star_rate</md-icon>
+    </button>
+  </span>

@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs/Rx';
+import { StarBarComponent } from './../star-bar/star-bar.component';
 import { SkillService } from './../skill.service';
 /* tslint:disable:no-unused-variable */
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -14,11 +16,14 @@ describe('SkillAdderComponent', () => {
 
   beforeEach(() => {
     skillServiceMock = jasmine.createSpyObj('skillService', ['add']);
+    (skillServiceMock.add as jasmine.Spy).and.callFake(() => {
+      return Observable.from([]);
+    });
   });
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [SkillAdderComponent],
+      declarations: [SkillAdderComponent, StarBarComponent],
       imports: [MaterialModule.forRoot()],
       providers: [
         { provide: SkillService, useValue: skillServiceMock }

@@ -8,12 +8,14 @@ import { AppComponent } from './app.component';
 import { MaterialModule } from '@angular/material';
 import 'hammerjs';
 import { SkillAdderComponent } from './skill-adder/skill-adder.component';
+import { StarBarComponent } from './star-bar/star-bar.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    SkillAdderComponent
+    SkillAdderComponent,
+    StarBarComponent
   ],
   imports: [
     BrowserModule,

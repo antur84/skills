@@ -1,15 +1,5 @@
 <div>
-  <md-input id="skill-input" #skillInput placeholder="Add skill..." value="" required></md-input>
-  <span (mouseout)="onHoverExit()">
-    <button 
-      md-icon-button class="rating" 
-      *ngFor="let rating of ratings" 
-      [disabled]="isRatingButtonDisabled()" 
-      (click)="onClickRating(rating)"
-      [color]="getRatingColor(rating)" 
-      (mouseover)="onHoverRating(rating)">
-        <md-icon class="icon">star_rate</md-icon>
-    </button>
-  </span>
+  <md-input id="skill-input" #skillInput placeholder="Add skill..." value="" required maxlength="30"></md-input>
+  <app-star-bar (ratingChanged)="onRatingChanged($event)" [ratings]="ratings" [disabled]="isSkillNameEmpty()"></app-star-bar>
   <button id="add" md-raised-button color="primary" (click)="addSkill()" [disabled]="isAddSkillButtonDisabled()">Add Skill</button>
 </div>
