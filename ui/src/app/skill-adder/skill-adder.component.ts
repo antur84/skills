@@ -40,7 +40,6 @@ export class SkillAdderComponent implements OnInit {
   }
 
   onRatingChanged(rating: number) {
-    console.log('tjo');
     this.changedRating = rating;
   }
 
