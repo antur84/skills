@@ -16,6 +16,8 @@ using System.Text;
 using System.IO;
 using Newtonsoft.Json;
 using Cinode.Api.Models;
+using Cinode.Skills.Api;
+using Microsoft.Extensions.Primitives;
 
 namespace Api
 {
@@ -55,35 +57,67 @@ namespace Api
 
             ConfigureErrorHandling(app);
 
+            ConfigureCors(app);
+
             app.UseMvc();
+        }
+
+        private void ConfigureCors(IApplicationBuilder app)
+        {
+            app.UseCors(builder =>
+            {
+                builder
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .WithOrigins(GetAllowedOrigins())
+                    .Build();
+            });
+        }
+
+        private string[] GetAllowedOrigins()
+        {
+            return AllowedOrigins.Whitelist.ToArray();
         }
 
         private void ConfigureErrorHandling(IApplicationBuilder app)
         {
-            app.UseExceptionHandler(errorApp =>
+            app.UseExceptionHandler(builder  =>
             {
-                errorApp.Run(async context =>
+                builder.Run(async context =>
                 {
                     context.Response.StatusCode = 500;
                     context.Response.ContentType = "application/json";
+                    string origin;
+                    if (IsOriginWhitelisted(context, out origin))
+                    {
+                        context.Response.Headers.Add("Access-Control-Allow-Origin", origin);
+                    }
 
                     var error = context.Features.Get<IExceptionHandlerFeature>();
                     if (error != null)
                     {
                         var ex = error.Error;
-
-                        using (var writer = new StreamWriter(context.Response.Body))
+                        await context.Response.WriteAsync(JsonConvert.SerializeObject(new
+                            ApiResponseViewModel<object>
                         {
-                            await writer.WriteLineAsync(JsonConvert.SerializeObject(new
-                                ApiResponseViewModel<object>
-                            {
-                                Code = 1337,
-                                Message = "You did something terrible!"
-                            }));
-                        }
+                            Code = 500,
+                            Message = ex.Message
+                        }));
                     }
                 });
             });
+        }
+
+        private bool IsOriginWhitelisted(HttpContext context, out string origin)
+        {
+            StringValues temp;
+            origin = string.Empty;
+            if (context.Request.Headers.TryGetValue("Origin", out temp)) {
+                var o = temp.First();
+                origin = o;
+                return GetAllowedOrigins().Any(x => x == o);
+            }
+            return false;
         }
 
         private void RegisterRepositories(IServiceCollection services)

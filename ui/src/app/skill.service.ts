@@ -20,17 +20,22 @@ export class SkillService {
       name: name,
       rating: rating
     };
-    console.log("hallå?!!!");
 
     const body = JSON.stringify(skill);
     return this.http.post(this.skillsUrl, body, this.createOptions())
-      .map((res: Response) => res.json())
-      .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+      .map((res: Response) => {
+        return res.json();
+      })
+      .catch(this.handleErrorIfAny);
   }
 
   private createOptions() {
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers });
     return options;
+  }
+
+  private handleErrorIfAny(error: any) {
+    return Observable.throw(error.json() || 'Unknown API error');
   }
 }

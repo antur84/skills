@@ -31,7 +31,7 @@ namespace Cinode.Api.Tests.Controllers
         public async Task Get_should_return_from_handler()
         {
             var actualSkills = await sut.Get();
-            Assert.That(actualSkills, Is.EqualTo(expectedSkills));
+            Assert.That(actualSkills.Data, Is.EqualTo(expectedSkills));
         }
 
         [Test]

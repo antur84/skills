@@ -22,7 +22,10 @@ export class SkillAdderComponent implements OnInit {
   }
 
   addSkill() {
-    this.skillService.add(this.skillInput.value, this.getSelectedRating().id);
+    this.skillService.add(this.skillInput.value, this.getSelectedRating().id).subscribe(x => {
+    }, (err) => {
+      console.log(err);
+    });
     this.reset();
   }
 

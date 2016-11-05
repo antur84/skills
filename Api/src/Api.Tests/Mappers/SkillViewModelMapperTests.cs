@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cinode.Skills.Api.Repositories.DataModels;
+using Cinode.Skills.Api.Models;
 
 namespace Cinode.Api.Tests.Mappers
 {
@@ -39,6 +40,13 @@ namespace Cinode.Api.Tests.Mappers
         {
             skill.RatingPercentage = 11;
             Assert.That(sut.Map(skill).Rating, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void MapReverse_should_convert_rating_to_percentages([Values(0, 1, 2, 3, 4, 5)] int rating)
+        {
+            var skillViewModel = new SkillViewModel(Guid.Parse("a7946b5c-d2b2-4bd9-9a19-0b8baccf1d68"), "c#", rating);
+            Assert.That(sut.MapReverse(skillViewModel).RatingPercentage, Is.EqualTo(rating * 20));
         }
     }
 }

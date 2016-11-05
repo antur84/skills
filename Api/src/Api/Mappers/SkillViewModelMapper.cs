@@ -24,7 +24,12 @@ namespace Cinode.Skills.Api.Mappers
 
         public Skill MapReverse(SkillViewModel from)
         {
-            throw new NotImplementedException();
+            return new Skill
+            {
+                ExternalId = from.ExternalId,
+                Name = from.Name,
+                RatingPercentage = (int)(from.Rating / (decimal)SkillLevels * 100)
+            };
         }
     }
 }
