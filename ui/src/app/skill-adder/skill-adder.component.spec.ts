@@ -27,7 +27,8 @@ describe('SkillAdderComponent', () => {
       imports: [MaterialModule.forRoot()],
       providers: [
         { provide: SkillService, useValue: skillServiceMock }
-      ]
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
       .compileComponents();
   }));

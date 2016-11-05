@@ -18,6 +18,7 @@ using Newtonsoft.Json;
 using Cinode.Api.Models;
 using Cinode.Skills.Api;
 using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json.Serialization;
 
 namespace Api
 {
@@ -81,7 +82,7 @@ namespace Api
 
         private void ConfigureErrorHandling(IApplicationBuilder app)
         {
-            app.UseExceptionHandler(builder  =>
+            app.UseExceptionHandler(builder =>
             {
                 builder.Run(async context =>
                 {
@@ -102,6 +103,9 @@ namespace Api
                         {
                             Code = 500,
                             Message = ex.Message
+                        }, new JsonSerializerSettings
+                        {
+                            ContractResolver = new CamelCasePropertyNamesContractResolver()
                         }));
                     }
                 });
@@ -112,7 +116,8 @@ namespace Api
         {
             StringValues temp;
             origin = string.Empty;
-            if (context.Request.Headers.TryGetValue("Origin", out temp)) {
+            if (context.Request.Headers.TryGetValue("Origin", out temp))
+            {
                 var o = temp.First();
                 origin = o;
                 return GetAllowedOrigins().Any(x => x == o);

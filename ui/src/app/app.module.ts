@@ -9,13 +9,15 @@ import { MaterialModule } from '@angular/material';
 import 'hammerjs';
 import { SkillAdderComponent } from './skill-adder/skill-adder.component';
 import { StarBarComponent } from './star-bar/star-bar.component';
+import { SnackbarAnchorComponent } from './snackbar-anchor/snackbar-anchor.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     SkillAdderComponent,
-    StarBarComponent
+    StarBarComponent,
+    SnackbarAnchorComponent
   ],
   imports: [
     BrowserModule,
