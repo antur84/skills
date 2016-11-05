@@ -11,6 +11,11 @@ namespace Cinode.Skills.Api.Repositories
     {
         private ConcurrentBag<Skill> skills = new ConcurrentBag<Skill>();
 
+        public void Add(Skill dbEntityToAdd)
+        {
+            this.skills.Add(dbEntityToAdd);
+        }
+
         public Task<IEnumerable<Skill>> GetAll()
         {
             return Task.FromResult(skills.AsEnumerable());

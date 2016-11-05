@@ -10,6 +10,12 @@ using Microsoft.Extensions.Logging;
 using System.Reflection;
 using Cinode.Skills.Api.Mappers;
 using Cinode.Skills.Api.Repositories;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
+using System.Text;
+using System.IO;
+using Newtonsoft.Json;
+using Cinode.Api.Models;
 
 namespace Api
 {
@@ -47,7 +53,37 @@ namespace Api
                 app.UseDeveloperExceptionPage();
             }
 
+            ConfigureErrorHandling(app);
+
             app.UseMvc();
+        }
+
+        private void ConfigureErrorHandling(IApplicationBuilder app)
+        {
+            app.UseExceptionHandler(errorApp =>
+            {
+                errorApp.Run(async context =>
+                {
+                    context.Response.StatusCode = 500;
+                    context.Response.ContentType = "application/json";
+
+                    var error = context.Features.Get<IExceptionHandlerFeature>();
+                    if (error != null)
+                    {
+                        var ex = error.Error;
+
+                        using (var writer = new StreamWriter(context.Response.Body))
+                        {
+                            await writer.WriteLineAsync(JsonConvert.SerializeObject(new
+                                ApiResponseViewModel<object>
+                            {
+                                Code = 1337,
+                                Message = "You did something terrible!"
+                            }));
+                        }
+                    }
+                });
+            });
         }
 
         private void RegisterRepositories(IServiceCollection services)
@@ -64,10 +100,10 @@ namespace Api
 
         private void RegisterAllServicesByConvention(IServiceCollection services)
         {
-            var typesWithMatchingInterfaceNames = GetType().GetTypeInfo().Assembly.ExportedTypes.Where(x => 
+            var typesWithMatchingInterfaceNames = GetType().GetTypeInfo().Assembly.ExportedTypes.Where(x =>
                 x.GetTypeInfo().GetInterfaces().FirstOrDefault(i => i.Name == "I" + x.Name) != null);
 
-            foreach(var implementationType in typesWithMatchingInterfaceNames)
+            foreach (var implementationType in typesWithMatchingInterfaceNames)
             {
                 var serviceType = implementationType.GetTypeInfo().GetInterface("I" + implementationType.Name);
                 services.AddScoped(serviceType, implementationType);
@@ -88,7 +124,7 @@ namespace Api
 
         private IEnumerable<Type> GetAllTypesWhichImplementsInterface(Type type)
         {
-            return GetType().GetTypeInfo().Assembly.ExportedTypes.Where(x => 
+            return GetType().GetTypeInfo().Assembly.ExportedTypes.Where(x =>
                 x.GetTypeInfo().GetInterfaces().Any(i => i.Name == type.GetTypeInfo().Name));
         }
     }

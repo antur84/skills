@@ -7,5 +7,6 @@ namespace Cinode.Api.Tests.Handlers
     public interface ISkillsHandler
     {
         Task<IEnumerable<SkillViewModel>> GetAllSkills();
+        void Add(SkillViewModel skill);
     }
 }

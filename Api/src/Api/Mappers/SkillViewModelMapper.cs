@@ -21,5 +21,10 @@ namespace Cinode.Skills.Api.Mappers
             var v = (decimal)number / 100 * SkillLevels;
             return (int)Math.Round(v);
         }
+
+        public Skill MapReverse(SkillViewModel from)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Cinode.Skills.Api.Models;
 using Cinode.Api.Tests.Handlers;
+using Cinode.Api.Models;
 
 namespace Cinode.Skills.Api.Controllers
 {
@@ -19,14 +20,32 @@ namespace Cinode.Skills.Api.Controllers
         }
 
         [HttpGet]
-        public Task<IEnumerable<SkillViewModel>> Get()
+        public async Task<ApiResponseViewModel<IEnumerable<SkillViewModel>>> Get()
         {
-            return skillsHandler.GetAllSkills();
+            var skills = await skillsHandler.GetAllSkills();
+            return CreateOkResponse(skills);
         }
 
         [HttpPost]
-        public void Post([FromBody]SkillViewModel model)
+        public ApiResponseViewModel<object> Post([FromBody]SkillViewModel model)
         {
+            skillsHandler.Add(model);
+            return CreateEmptyOkResponse();
+        }
+
+        private ApiResponseViewModel<object> CreateEmptyOkResponse()
+        {
+            return CreateOkResponse<object>(null);
+        }
+
+        private ApiResponseViewModel<T> CreateOkResponse<T>(T data)
+        {
+            return new ApiResponseViewModel<T>
+            {
+                Code = 200,
+                Message = null,
+                Data = data
+            };
         }
     }
 }

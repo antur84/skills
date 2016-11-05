@@ -23,6 +23,7 @@ namespace Cinode.Api.Tests.Controllers
             expectedSkills = new List<SkillViewModel>();
             skillsHandlerMock = new Mock<ISkillsHandler>();
             skillsHandlerMock.Setup(x => x.GetAllSkills()).ReturnsAsync(expectedSkills);
+            skillsHandlerMock.Setup(x => x.Add(It.IsAny<SkillViewModel>()));
             sut = new SkillsController(skillsHandlerMock.Object);
         }
 
@@ -31,6 +32,14 @@ namespace Cinode.Api.Tests.Controllers
         {
             var actualSkills = await sut.Get();
             Assert.That(actualSkills, Is.EqualTo(expectedSkills));
+        }
+
+        [Test]
+        public void Post_should_pass_object_to_handler()
+        {
+            var skill = new SkillViewModel(Guid.Parse("a60a539d-e79c-43d9-a8dc-189c22f8387d"), "Javascript", 5);
+            sut.Post(skill);
+            skillsHandlerMock.Verify(x => x.Add(skill), Times.Once);
         }
     }
 }

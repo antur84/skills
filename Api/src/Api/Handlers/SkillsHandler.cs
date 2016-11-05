@@ -26,5 +26,11 @@ namespace Cinode.Skills.Api.Handlers
             var dbSkills = await repository.GetAll();
             return dbSkills.Select(x => mapper.Map(x)); 
         }
+
+        public void Add(SkillViewModel skill)
+        {
+            var dbEntityToAdd = mapper.MapReverse(skill);
+            repository.Add(dbEntityToAdd);
+        }
     }
 }

@@ -31,6 +31,7 @@ namespace Cinode.Api.Tests.Handlers
             };
             skillsRepositoryMock = new Mock<IRepository<Skill>>();
             skillsRepositoryMock.Setup(x => x.GetAll()).ReturnsAsync(dbSkills);
+            skillsRepositoryMock.Setup(x => x.Add(It.IsAny<Skill>()));
 
             mapperMock = new Mock<IMapper<Skill, SkillViewModel>>();
             mapperMock.Setup(x => x.Map(It.IsAny<Skill>())).Returns(() => new SkillViewModel(Guid.Empty, "", 0));
@@ -43,6 +44,18 @@ namespace Cinode.Api.Tests.Handlers
         {
             var actual = await sut.GetAllSkills();
             Assert.That(actual.Count(), Is.EqualTo(dbSkills.Count()));
+        }
+
+        [Test]
+        public void Add_should_add_to_repo()
+        {
+            var dbSkill = new Skill();
+            var skill = new SkillViewModel(Guid.Parse("8751a649-be2f-4a16-b310-cbc3d9467598"), "Javascript", 5);
+            mapperMock.Setup(x => x.MapReverse(skill)).Returns(dbSkill);
+
+            sut.Add(skill);
+
+            skillsRepositoryMock.Verify(x => x.Add(dbSkill), Times.Once);
         }
     }
 }
