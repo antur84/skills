@@ -7,13 +7,28 @@ describe('Service: Skill', () => {
 
   let httpMock: Http,
     sut: SkillService,
-    postedRequest;
+    postedRequest,
+    skillViewModels: SkillViewModel[];
 
   beforeEach(() => {
-    httpMock = jasmine.createSpyObj('http', ['post']);
+    skillViewModels = [];
+  });
+
+  beforeEach(() => {
+    httpMock = jasmine.createSpyObj('http', ['post', 'get']);
+
     (httpMock.post as jasmine.Spy).and.callFake((url, request) => {
       postedRequest = JSON.parse(request);
-      return Observable.from([]);
+      return Observable.from([{}]);
+    });
+
+    (httpMock.get as jasmine.Spy).and.callFake((url) => {
+      let response = {
+        json: () => {
+          return { data: skillViewModels };
+        }
+      };
+      return Observable.from([response]);
     });
   });
 
@@ -53,6 +68,13 @@ describe('Service: Skill', () => {
 
       it('should have set the rating in request', () => {
         expect(postedRequest.rating).toBe(5);
+      });
+
+      it('should have added to list', () => {
+        sut.getAll().subscribe(x => {
+          expect(x.length).toBe(1);
+          expect(x[0].name).toBe('c#');
+        });
       });
     });
   });

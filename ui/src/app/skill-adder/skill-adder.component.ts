@@ -51,6 +51,7 @@ export class SkillAdderComponent implements OnInit {
     this.skillInput.focus();
     this.skillInput.value = '';
     this.ratings = [];
+    this.changedRating = 0;
     for (let i = 1; i <= 5; i++) {
       this.ratings.push({
         isSet: false,
