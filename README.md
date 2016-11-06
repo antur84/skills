@@ -9,7 +9,7 @@ To run the Api you require the ASP.NET Core sdk, it works on unix/windows/mac
 
 navigate to src/Api
 
-run: dotnet restore; $env:ASPNETCORE_URLS="https://*:52752"; dotnet run (on windows)
+run: dotnet restore; dotnet run --urls=http://localhost:52752/
 
 You can verify api at http://localhost:52752/api/skills
 
