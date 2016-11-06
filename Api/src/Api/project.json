@@ -17,7 +17,8 @@
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
     "Microsoft.AspNetCore.Diagnostics.Abstractions": "1.0.0",
-    "Microsoft.AspNetCore.Cors": "1.0.0"
+    "Microsoft.AspNetCore.Cors": "1.0.0",
+    "Microsoft.Extensions.Configuration.CommandLine": "1.0.0"
   },
 
   "tools": {
@@ -46,10 +47,11 @@
 
   "publishOptions": {
     "include": [
-      "wwwroot",
-      "**/*.cshtml",
-      "appsettings.json",
-      "web.config"
+        "wwwroot",
+        "**/*.cshtml",
+        "appsettings.json",
+        "web.config",
+        "hosting.json"
     ]
   },
 
