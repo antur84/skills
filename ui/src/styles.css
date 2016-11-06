@@ -4,8 +4,8 @@
 body {
   margin: 0;
   padding: 15px;
-  font-family: Roboto, sans-serif;
-  background: #fdfdfd;
+  font-family: "Roboto Mono", sans-serif;
+  background: #212121;
 }
 * {
   -webkit-font-smoothing: antialiased;
