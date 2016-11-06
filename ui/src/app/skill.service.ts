@@ -23,19 +23,42 @@ export class SkillService {
   }
 
   add(name: string, rating: number) {
-    const skillViewModel = {
-      externalId: UUID.UUID(),
-      name: name,
-      rating: rating
-    } as SkillViewModel;
-
+    const skillViewModel = this.createSkillViewModel(name, rating, UUID.UUID());
     const body = JSON.stringify(skillViewModel);
     const postObservable = this.http.post(this.skillsUrl, body, this.createOptions()).catch(this.handleErrorIfAny).share();
     postObservable.subscribe((res: Response) => {
-      this.skillViewModels.getValue().splice(0, 0, skillViewModel);
+      this.skillViewModels.next([skillViewModel].concat(this.skillViewModels.getValue()));
+    }, (err) => err);
+    return postObservable;
+  }
+
+  update(externalId: string, rating: number) {
+    const current = this.skillViewModels.getValue().find(x => x.externalId === externalId);
+    const body = JSON.stringify(this.createSkillViewModel(current.name, rating, externalId));
+    const postObservable = this.http.put(this.skillsUrl, body, this.createOptions()).catch(this.handleErrorIfAny).share();
+    postObservable.subscribe((res: Response) => {
+      current.rating = rating;
       this.skillViewModels.next(this.skillViewModels.getValue());
     }, (err) => err);
     return postObservable;
+  }
+
+  delete(externalId: string) {
+    const postObservable = this.http.delete(this.skillsUrl + '/' + externalId, this.createOptions())
+      .catch(this.handleErrorIfAny).share();
+    postObservable.subscribe((res: Response) => {
+      let allExceptDeleted = this.skillViewModels.getValue().filter(x => x.externalId !== externalId);
+      this.skillViewModels.next(allExceptDeleted);
+    }, (err) => err);
+    return postObservable;
+  }
+
+  private createSkillViewModel(name: string, rating: number, externalId: string) {
+    return {
+      externalId: externalId,
+      name: name,
+      rating: rating
+    } as SkillViewModel;
   }
 
   private load() {

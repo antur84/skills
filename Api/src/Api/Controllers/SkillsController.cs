@@ -33,6 +33,20 @@ namespace Cinode.Skills.Api.Controllers
             return CreateEmptyOkResponse();
         }
 
+        [HttpPut]
+        public ApiResponseViewModel<object> Put([FromBody]SkillViewModel model)
+        {
+            skillsHandler.Update(model);
+            return CreateEmptyOkResponse();
+        }
+
+        [HttpDelete("{externalId}")]
+        public ApiResponseViewModel<object> Delete(Guid externalId)
+        {
+            skillsHandler.Delete(externalId);
+            return CreateEmptyOkResponse();
+        }
+
         private ApiResponseViewModel<object> CreateEmptyOkResponse()
         {
             return CreateOkResponse<object>(null);

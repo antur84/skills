@@ -11,22 +11,50 @@ namespace Cinode.Skills.Api.Repositories
     public class SkillRepository : IRepository<Skill>
     {
         private int id = 0;
-        private ConcurrentBag<Skill> skills = new ConcurrentBag<Skill>();
+        private ConcurrentDictionary<int, Skill> skills = new ConcurrentDictionary<int, Skill>();
 
         public void Add(Skill dbEntityToAdd)
         {
-            if (skills.Any(x => x.Name == dbEntityToAdd.Name))
+            if (skills.Any(x => x.Value.Name == dbEntityToAdd.Name))
             {
                 throw new BusinessRuleException("Skill already exists, " + dbEntityToAdd.Name);
             }
             id++;
             dbEntityToAdd.Id = id;
-            skills.Add(dbEntityToAdd);
+            dbEntityToAdd.Created = DateTime.UtcNow;
+            skills[id] = dbEntityToAdd;
+        }
+
+        public void Delete(Guid externalId)
+        {
+            Skill removed;
+            var id = GetOrThrow(externalId).Id;
+            skills.TryRemove(id, out removed);
         }
 
         public Task<IEnumerable<Skill>> GetAll()
         {
-            return Task.FromResult(skills.AsEnumerable());
+            var orderedSkills = skills.Values.OrderByDescending(x => x.Created);
+            return Task.FromResult(orderedSkills.AsEnumerable());
+        }
+
+        public void Update(Skill dbEntityToUpdate)
+        {
+            Skill current = GetOrThrow(dbEntityToUpdate.ExternalId);
+
+            current.Name = dbEntityToUpdate.Name;
+            current.RatingPercentage = dbEntityToUpdate.RatingPercentage;
+        }
+
+        private Skill GetOrThrow(Guid externalId)
+        {
+            var current = skills.Values.FirstOrDefault(x => x.ExternalId == externalId);
+            if (current == null)
+            {
+                throw new BusinessRuleException("Skill does not exist");
+            }
+
+            return current;
         }
     }
 }

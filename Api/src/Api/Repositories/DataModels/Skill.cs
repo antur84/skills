@@ -20,5 +20,8 @@ namespace Cinode.Skills.Api.Repositories.DataModels
 
         [DataMember]
         public int RatingPercentage { get; set; }
+
+        [DataMember]
+        public DateTime? Created { get; internal set; }
     }
 }

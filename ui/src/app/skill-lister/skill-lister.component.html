@@ -2,6 +2,7 @@
   <md-list-item *ngFor="let skill of skills">
     <span>{{skill.name}}</span>
     <span class="spacer"></span>
-    <app-star-bar [ratings]="skill.ratings"></app-star-bar>
+    <app-star-bar [ratings]="skill.ratings" (ratingChanged)="onRatingChanged(skill, $event)"></app-star-bar>
+    <app-skill-deleter (onDeleteSkill)="onSkillDeleted(skill)"></app-skill-deleter>
   </md-list-item>
 </md-list>

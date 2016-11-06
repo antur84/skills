@@ -5,7 +5,7 @@ namespace Cinode.Skills.Api.Models
 {
     public class SkillViewModel
     {
-        public SkillViewModela(Guid externalId, string name, int rating)
+        public SkillViewModel(Guid externalId, string name, int rating)
         {
             Name = SkillNameRule.Enforce(name);
             Rating = SkillRatingRule.Enforce(rating);

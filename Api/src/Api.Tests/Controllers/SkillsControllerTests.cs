@@ -41,5 +41,21 @@ namespace Cinode.Api.Tests.Controllers
             sut.Post(skill);
             skillsHandlerMock.Verify(x => x.Add(skill), Times.Once);
         }
+
+        [Test]
+        public void Put_should_pass_object_to_handler()
+        {
+            var skill = new SkillViewModel(Guid.Parse("a60a539d-e79c-43d9-a8dc-189c22f8387d"), "Javascript", 5);
+            sut.Put(skill);
+            skillsHandlerMock.Verify(x => x.Update(skill), Times.Once);
+        }
+
+        [Test]
+        public void Delete_should_pass_object_to_handler()
+        {
+            var externalId = Guid.Parse("a60a539d-e79c-43d9-a8dc-189c22f8387d");
+            sut.Delete(externalId);
+            skillsHandlerMock.Verify(x => x.Delete(externalId), Times.Once);
+        }
     }
 }

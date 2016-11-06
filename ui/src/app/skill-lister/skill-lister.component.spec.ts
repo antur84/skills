@@ -1,3 +1,4 @@
+import { SkillDeleterComponent } from './../skill-deleter/skill-deleter.component';
 import { Observable } from 'rxjs/Rx';
 import { SkillService } from './../skill.service';
 import { StarBarComponent } from './../star-bar/star-bar.component';
@@ -39,7 +40,7 @@ describe('SkillListerComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MaterialModule.forRoot()],
-      declarations: [SkillListerComponent, StarBarComponent],
+      declarations: [SkillListerComponent, StarBarComponent, SkillDeleterComponent],
       providers: [
         { provide: SkillService, useValue: skillServiceMock }
       ],

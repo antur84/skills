@@ -25,6 +25,14 @@ export class SkillListerComponent implements OnInit {
     });
   }
 
+  onRatingChanged(skill: SkillViewModelWithStars, rating: number) {
+    this.skillsService.update(skill.externalId, rating);
+  }
+
+  onSkillDeleted(skill) {
+    this.skillsService.delete(skill.externalId);
+  }
+
   private createRatings(rating: number): Rating[] {
     let result: Rating[] = [];
     for (let i = 1; i <= 5; i++) {

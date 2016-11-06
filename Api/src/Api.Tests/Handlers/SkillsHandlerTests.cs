@@ -57,5 +57,26 @@ namespace Cinode.Api.Tests.Handlers
 
             skillsRepositoryMock.Verify(x => x.Add(dbSkill), Times.Once);
         }
+
+        [Test]
+        public void Update_should_update_to_repo()
+        {
+            var dbSkill = new Skill();
+            var skill = new SkillViewModel(Guid.Parse("8751a649-be2f-4a16-b310-cbc3d9467598"), "Javascript", 5);
+            mapperMock.Setup(x => x.MapReverse(skill)).Returns(dbSkill);
+
+            sut.Update(skill);
+
+            skillsRepositoryMock.Verify(x => x.Update(dbSkill), Times.Once);
+        }
+
+        [Test]
+        public void Delete_should_delete_to_repo()
+        {
+            var externalId = Guid.Parse("8751a649-be2f-4a16-b310-cbc3d9467598");
+            sut.Delete(externalId);
+
+            skillsRepositoryMock.Verify(x => x.Delete(externalId), Times.Once);
+        }
     }
 }
