@@ -10,6 +10,7 @@ import 'hammerjs';
 import { SkillAdderComponent } from './skill-adder/skill-adder.component';
 import { StarBarComponent } from './star-bar/star-bar.component';
 import { SnackbarAnchorComponent } from './snackbar-anchor/snackbar-anchor.component';
+import { SkillListerComponent } from './skill-lister/skill-lister.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { SnackbarAnchorComponent } from './snackbar-anchor/snackbar-anchor.compo
     AppComponent,
     SkillAdderComponent,
     StarBarComponent,
-    SnackbarAnchorComponent
+    SnackbarAnchorComponent,
+    SkillListerComponent
   ],
   imports: [
     BrowserModule,

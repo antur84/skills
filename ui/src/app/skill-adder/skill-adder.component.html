@@ -1,6 +1,4 @@
 <app-snackbar-anchor></app-snackbar-anchor>
-<div>
-  <md-input id="skill-input" #skillInput placeholder="Add skill..." value="" required maxlength="30"></md-input>
-  <app-star-bar (ratingChanged)="onRatingChanged($event)" [ratings]="ratings" [disabled]="isSkillNameEmpty()"></app-star-bar>
-  <button id="add" md-raised-button color="primary" (click)="addSkill()" [disabled]="isAddSkillButtonDisabled()">Add Skill</button>
-</div>
+<md-input id="skill-input" #skillInput placeholder="Add skill..." value="" required maxlength="20"></md-input>
+<app-star-bar (ratingChanged)="onRatingChanged($event)" [ratings]="ratings" [disabled]="isSkillNameEmpty()"></app-star-bar>
+<button id="add" md-raised-button color="primary" (click)="addSkill()" [disabled]="isAddSkillButtonDisabled()">Add Skill</button>

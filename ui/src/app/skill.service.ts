@@ -14,6 +14,14 @@ export class SkillService {
 
   constructor(private http: Http) { }
 
+  getAll(): Observable<SkillViewModel[]> {
+    return this.http.get(this.skillsUrl, this.createOptions())
+      .map((res: Response) => {
+        return res.json().data;
+      })
+      .catch(this.handleErrorIfAny);
+  }
+
   add(name: string, rating: number) {
     const skill = {
       externalId: UUID.UUID(),
